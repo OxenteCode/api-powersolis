@@ -144,7 +144,7 @@ C:\Users\usuario\.virtualenvs\nome_projeto-abc123
 
 ## Rodando a API (para painéis / front-end)
 
-Este projeto fornece um exemplo de API em `app.py` utilizando **FastAPI**.
+Este projeto fornece a API em `main.py` utilizando **FastAPI**.
 
 ### 1. Instalar dependências
 
@@ -154,10 +154,10 @@ pipenv install
 
 > Nota: `Pipfile` já foi atualizado para incluir `fastapi` e `uvicorn`.
 
-### 2. Executar o servidor de desenvolvimento
+### 2. Executar o servidor de desenvolvimento local
 
 ```sh
-pipenv run uvicorn app:app --reload
+pipenv run uvicorn main:app --reload
 ```
 
 ### 3. Testar os endpoints
@@ -185,48 +185,44 @@ pipenv run uvicorn app:app --reload
 
 ---
 
-## Deploy em VPS (ex: EasyPanel)
 
-Este projeto inclui um **Dockerfile** e `requirements.txt` para facilitar o deploy em servidores que suportam containers (EasyPanel, Docker, etc.).
+### URLs e teste no Easypanel
 
-### 1) Build do container local (opcional)
+Após o deploy e a configuração do domínio no Easypanel (como `api.powersolis.cloud`), a API já terá o certificado SSL configurado automaticamente. Você pode testar e interagir de diferentes maneiras:
 
-```sh
-docker build -t api-powersolis:latest .
+#### Acesso pela Interface Web (Swagger UI - Recomendado)
+Acesse a URL no navegador para ver e testar a API visualmente:
+👉 **[https://api.powersolis.cloud/docs](https://api.powersolis.cloud/docs)**
+
+#### Teste via Terminal (cURL)
+- Health check (Verificar se a API está online):
+  ```sh
+  curl -X GET "https://api.powersolis.cloud/health"
+  ```
+- Inferência de Hotspot:
+  ```sh
+  curl -X POST "https://api.powersolis.cloud/inferir-hotspot" \
+       -H "Content-Type: application/json" \
+       -d '{"tangente_perdas": 0.5, "corrente_primario": 400.0, "temperatura_ambiente": 25.0}'
+  ```
+
+#### Integração no Front-end (JavaScript / React via Fetch)
+Como o projeto está com CORS configurado, ele pode ser acessado diretamente pelo navegador em painéis web:
+```javascript
+fetch('https://api.powersolis.cloud/inferir-hotspot', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        tangente_perdas: 0.6,
+        corrente_primario: 350.0,
+        temperatura_ambiente: 30.0
+    })
+})
+.then(response => response.json())
+.then(data => console.log('Resultado:', data))
+.catch(erro => console.error('Erro:', erro));
 ```
-
-### 2) Executar localmente (opcional)
-
-```sh
-docker run --rm -p 8000:8000 api-powersolis:latest
-```
-
-### 3) Deploy no EasyPanel (ou outro painel Docker)
-
-No EasyPanel você pode:
-
-1. Criar um novo "App" / "Service" usando a opção de deploy por **Git**.
-2. Informar o repositório GitHub (ou Git remoto) e o branch (`main`).
-3. Configurar o comando de build (geralmente `docker build .`).
-4. Mapear a porta interna `8000` para uma porta externa (ex: `8000`).
-
-> ✅ O container expõe o servidor FastAPI em `0.0.0.0:8000`.
-
-### 4) URLs e teste final
-
-Após o deploy, o painel (EasyPanel) normalmente informa o domínio / IP público e a porta.
-A API deve responder em:
-
-```
-http://<IP-ou-DOMÍNIO>:<PORTA>/health
-```
-
-E os endpoints continuam os mesmos usados localmente.
 
 ---
-
-### Dicas para produção
-
-- Use um proxy reverso (NGINX, Traefik, etc.) para expor a porta 80/443 e habilitar HTTPS.
-- Configure variáveis de ambiente para parâmetros (por exemplo, se precisar usar outro modelo salvo).
-- Se for expor publicamente, adicione autenticação (API-Key / JWT) antes de liberar acesso.
