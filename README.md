@@ -161,14 +161,14 @@ pipenv run uvicorn api.main:app --reload
 
 Depois acesse:
 
-- `http://127.0.0.1:8000/health`
-- `http://127.0.0.1:8000/docs`
-- `http://127.0.0.1:8000/api/v1/ready`
+- `http://127.0.0.1/health`
+- `http://127.0.0.1/docs`
+- `http://127.0.0.1/api/v1/ready`
 
 ### Diagnostico individual
 
 ```sh
-curl -X POST http://127.0.0.1:8000/api/v1/diagnosticos ^
+curl -X POST http://127.0.0.1/api/v1/diagnosticos ^
   -H "Content-Type: application/json" ^
   -d "{\"id_equipamento\":\"TC-550kV-001\",\"tangente_perdas\":0.7,\"corrente\":2000.0,\"temperatura_ambiente\":30.0,\"ponto_quente_externo\":45.0,\"horas_operacao\":87600.0,\"tensao_nominal\":550.0}"
 ```
