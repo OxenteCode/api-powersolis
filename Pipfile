@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "*"
+matplotlib = "*"
+pandas = "*"
+scikit-learn = "==1.7.2"
+odfpy = "*"
+scikit-fuzzy = "*"
+networkx = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+
+[dev-packages]
+spyder-kernels = "<3.2.0,>=3.1.0"
+httpx = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.13"

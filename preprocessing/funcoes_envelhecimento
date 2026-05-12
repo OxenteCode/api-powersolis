@@ -1,0 +1,9 @@
+import numpy as np
+
+def FAA(theta_hotspot):
+    #theta em °C
+    return np.exp(15000/383 - 15000/(theta_hotspot + 273.0))
+    
+def perda_de_vida_percentual(FEQA, t_horas, vida_util_isolamento_h=180_000):
+    #tempo t em horas e vida útil em horas
+    return FEQA * t_horas * 100.0 / vida_util_isolamento_h
